@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Friend Code</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Team</th>
+            <th scope="col">Boa Viagem</th>
+            <th scope="col">UFPE</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for player in submissions %}
+            <tr>
+                <td>{{ player["username"] }}</td>
+                <td>{{ player["code"] }}</td>
+                <td>{{ player["phone"] }}</td>
+                <td>{{ player["team"] }}</td>
+                <td>{{ player["bv"] }}</td>
+                <td>{{ player["ufpe"] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

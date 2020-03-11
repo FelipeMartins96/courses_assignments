@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Quoted
+{% endblock %}
+
+{% block main %}
+    <div class="card-body">
+        <h1>{{ name }}</h1>
+        <h1><small>Price: </small><small class="text-muted">{{ price }}</small></h1>
+        <h1><small>Symbol: </small><small class="text-muted">{{ symbol }}</small></h1>
+    </div>
+    <form action="/quote">
+        <button class="btn btn-primary" type="submit">Return</button>
+    </form>
+{% endblock %}

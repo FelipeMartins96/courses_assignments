@@ -1,0 +1,23 @@
+body
+{
+  background-color: whitesmoke;
+  text-align: center;
+}
+
+header
+{
+    font-size: xx-large;
+}
+
+footer
+{
+    font-size: small;
+    position:absolute;
+    bottom:0;
+}
+
+table
+{
+    margin-left: auto;
+    margin-right: auto;
+}
