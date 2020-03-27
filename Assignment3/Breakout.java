@@ -54,13 +54,71 @@ public class Breakout extends GraphicsProgram {
 /** Offset of the top brick row from the top */
 	private static final int BRICK_Y_OFFSET = 70;
 
+/** Number of colors [RED, ORANGE, YELLOW, GREEN, BLUE] */
+	private static final int NCOLORS = 5;
+	
+/** Number rows for each color */
+	private static final int NBRICK_ROWS_PER_COLOR = NBRICK_ROWS / NCOLORS;
+	
 /** Number of turns */
 	private static final int NTURNS = 3;
 
 /* Method: run() */
 /** Runs the Breakout program. */
 	public void run() {
-		/* You fill this in, along with any subsidiary methods */
+		setUp();
+//		play();
 	}
+	
+/** Peforms the initial program set up */
+	private void setUp() {
+		addBricks();
+	}
+
+/** adds the bricks */
+	private void addBricks() {
+		for (int i = 0; i < NBRICK_ROWS; i++) {
+			int brickY = BRICK_Y_OFFSET + ((BRICK_HEIGHT + BRICK_SEP) * i);
+			for (int j = 0; j < NBRICKS_PER_ROW; j++) {
+				int brickX = (BRICK_SEP / 2) + (BRICK_WIDTH + BRICK_SEP) * j;
+				GRect brick = new GRect(BRICK_WIDTH, BRICK_HEIGHT);
+				brick.setLocation(brickX, brickY);
+				setBrickColor(brick, i);
+				add(brick);
+			}
+		}
+	}
+
+/** 
+ * Sets the color for a brick object based on its row and predefined colors,
+ * the boundary color was delibarately left as black
+ * @param brick GRect objet which will have its filled color assigned
+ * @param brickRow The row index value for the brick from top down
+ */
+	private void setBrickColor (GRect brick, int brickRow) {
+		brick.setFilled(true);
+		int colorIndex = brickRow / NBRICK_ROWS_PER_COLOR;
+		switch (colorIndex) {
+			case 0:
+				brick.setFillColor(Color.RED);
+				break;
+			case 1:
+				brick.setFillColor(Color.ORANGE);
+				break;
+			case 2:
+				brick.setFillColor(Color.YELLOW);
+				break;
+			case 3:
+				brick.setFillColor(Color.GREEN);
+				break;
+			case 4:
+				brick.setFillColor(Color.BLUE);
+				break;
+			default:
+				brick.setFillColor(Color.BLACK);
+				break;
+		}
+	}
+		
 
 }
