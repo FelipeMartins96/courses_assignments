@@ -29,7 +29,8 @@ public class HangmanCanvas extends GCanvas {
 		if (scaffold == null) {
 			addGraphicObjects();
 		}
-		if (guessedChars != null) remove(guessedChars);
+		incorrectGuessedChars = "";
+		if (guessedChars != null) guessedChars.setLabel("");
 		removeBody();
 	}
 
@@ -64,10 +65,40 @@ public class HangmanCanvas extends GCanvas {
 			guessedChars.setLocation((getWidth() / 2) - BEAM_LENGTH,
 					((getHeight() / 2) + OFFSET) + 4 * guessedWord.getAscent());
 			add(guessedChars);
-			incorrectGuessedChars = "";
 		}
 		incorrectGuessedChars += letter;
 		guessedChars.setLabel(incorrectGuessedChars);
+		
+		switch (incorrectGuessedChars.length()) {
+			case 1: 
+				add(head);
+				break;
+			case 2:
+				add(body);
+				break;
+			case 3:
+				add(leftArmUpper);
+				add(leftArm);
+				break;
+			case 4:
+				add(rightArmUpper);
+				add(rightArm);
+				break;
+			case 5:
+				add(leftLegHip);
+				add(leftLeg);
+				break;
+			case 6:
+				add(rightLegHip);
+				add(rightLeg);
+				break;
+			case 7:
+				add(leftFoot);
+				break;
+			case 8:
+				add(rightFoot);
+				break;
+		}
 	}
 
 	private void addGraphicObjects() {
