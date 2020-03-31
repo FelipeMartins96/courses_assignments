@@ -16,6 +16,11 @@ public class Hangman extends ConsoleProgram {
 /** Max number of errors for a turn */
 private static final int MAX_NUM_ERRORS = 8;
 	
+	public void init() {
+		canvas = new HangmanCanvas();
+		add(canvas);		
+	}
+
     public void run() {
 		lexicon = new HangmanLexicon();
 		
@@ -27,9 +32,13 @@ private static final int MAX_NUM_ERRORS = 8;
 			// Counter for number of errors
 			int numErrors = 0;
 			
+			canvas.reset();
+			
 			println("Welcome to Hangman!");
+			canvas.displayWord(guessedWord);
 			// Continue looping until secret word is found or no guesses left
 			while (numErrors < MAX_NUM_ERRORS && guessedWord.indexOf('-') != -1) {
+				
 				println("The word now looks like this: " + guessedWord);
 				println("You have " + (MAX_NUM_ERRORS - numErrors) + " guesses left.");
 				
@@ -39,8 +48,10 @@ private static final int MAX_NUM_ERRORS = 8;
 					guessedWord = updateGuess(ch, secretWord, guessedWord);
 				} else {
 					println("There are no " + ch + "'s in the word.");
+					canvas.noteIncorrectGuess(ch);	
 					numErrors++;
 				}
+				canvas.displayWord(guessedWord);
 			}
 			
 			if (numErrors < MAX_NUM_ERRORS) {
@@ -103,7 +114,11 @@ private static final int MAX_NUM_ERRORS = 8;
 		while (index != -1) {
 			guessedWord = guessedWord.substring(0, index) +
 					ch + guessedWord.substring(index + 1);
-			index = secretWord.substring(index + 1).indexOf(ch);
+			if (index != (secretWord.length() - 1) && secretWord.substring(index + 1).indexOf(ch) != -1) {
+				index += secretWord.substring(index + 1).indexOf(ch) + 1;
+			} else {
+				index = -1;
+			}
 		}
 		return guessedWord;
     }
@@ -111,4 +126,5 @@ private static final int MAX_NUM_ERRORS = 8;
 /* Private instance variables */
     private RandomGenerator rgen = RandomGenerator.getInstance();
     private HangmanLexicon lexicon;
+    private HangmanCanvas canvas;
 }
