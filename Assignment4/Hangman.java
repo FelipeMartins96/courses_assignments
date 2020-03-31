@@ -54,6 +54,7 @@ private static final int MAX_NUM_ERRORS = 8;
 				canvas.displayWord(guessedWord);
 			}
 			
+			
 			if (numErrors < MAX_NUM_ERRORS) {
 				println("You guessed the word: " + secretWord);
 				println("You Win.");
