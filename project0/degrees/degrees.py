@@ -92,8 +92,56 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
-    # TODO
-    raise NotImplementedError
+    # For this search, we will use the Breadth-First Search since it's expected
+    # a separation not larger than 7 "state", but being possible to trace way longer
+    # paths 
+    # For this task the the equivalence can be made of State = Actors and Actions = Movies
+
+    # Start a frontier that contains the initial space
+    start = Node(state=source, parent=None, action=None)
+    frontier = QueueFrontier()
+    frontier.add(start)
+
+    # Start with an empty explored set
+    explored = set()
+
+    # Counts the number of state explored
+    num_explored = 0
+
+    # Repeat
+    while True:
+
+        # If frontier is empty, then no solution
+        if frontier.empty():
+            print("Steps:")
+            print(num_explored)
+            return None
+
+
+        # Remove a node from the frontier
+        node = frontier.remove()
+        num_explored += 1
+
+        # If node contain goal state, return the solution
+        if node.state == target:
+            print("Steps:")
+            print(num_explored)
+            shortest_list = []
+            while node.parent is not None:
+                shortest_list.append((node.action, node.state))
+                node = node.parent
+            shortest_list.reverse()
+            return shortest_list
+    
+        # Add node to the explored set
+        explored.add(node.state)
+
+        # Expand node, add resulting nodes to the frontier if
+        # they aren't already in the frontier or the explored set.
+        for neighbor in neighbors_for_person(node.state):
+            if not frontier.contains_state(neighbor[1]) and neighbor[1] not in explored:
+                frontier.add(Node(state=neighbor[1], parent=node, action=neighbor[0]))
+        
 
 
 def person_id_for_name(name):
