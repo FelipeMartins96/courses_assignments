@@ -44,4 +44,6 @@ public interface YahtzeeConstants {
 	public static final int LOWER_SCORE = 16;
 	public static final int TOTAL = 17;
   
+/** The Upper Score needed to gain a 35 point bonus */
+	public static final int UPPER_BONUS_TRIGGER = 63;
 }
