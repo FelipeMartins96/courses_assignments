@@ -56,6 +56,14 @@ public class Yahtzee extends GraphicsProgram implements YahtzeeConstants {
 					display.displayDice(dice);
 				}
 				
+				// DEBUG //////////////////////
+				//IODialog dialog = getDialog();
+				//for (int k = 0; k < N_DICE; k++) {
+				//	dice[k] = dialog.readInt("Enter value for die " + (k + 1));
+				//}
+				//display.displayDice(dice);
+				// DEBUG END //////////////////
+				
 				// Prompt to select category
 				int selectedCategory;
 				while (true) {
@@ -130,51 +138,107 @@ public class Yahtzee extends GraphicsProgram implements YahtzeeConstants {
 	
 	// Calculate the score for a selected category
 	private int calculateScore(int[] dice, int category) {
-			if (YahtzeeMagicStub.checkCategory(dice, category)) {	
-				switch (category) {
-					case ONES:
-						return sumMatchingDice(dice, ONES);
-						
-					case TWOS:
-						return sumMatchingDice(dice, TWOS);
-						
-					case THREES:
-						return sumMatchingDice(dice, THREES);
-						
-					case FOURS:
-						return sumMatchingDice(dice, FOURS);
-						
-					case FIVES:
-						return sumMatchingDice(dice, FIVES);
-						
-					case SIXES:
-						return sumMatchingDice(dice, SIXES);
-						
-					case THREE_OF_A_KIND:
-						return sumDice(dice);
-						
-					case FOUR_OF_A_KIND:
-						return sumDice(dice);
-						
-					case FULL_HOUSE:
-						return 25;
-						
-					case SMALL_STRAIGHT:
-						return 30;
-						
-					case LARGE_STRAIGHT:
-						return 40;
-						
-					case YAHTZEE:
-						return 50;
-						
-					case CHANCE:
-						return sumDice(dice);
+		int[] distribution = {0, 0, 0, 0, 0, 0};
+		diceDistribution(distribution, dice);
+		int sequenceCount = 0;
+		
+			switch (category) {
+				case ONES:
+					return sumMatchingDice(dice, ONES);
+					
+				case TWOS:
+					return sumMatchingDice(dice, TWOS);
+					
+				case THREES:
+					return sumMatchingDice(dice, THREES);
+					
+				case FOURS:
+					return sumMatchingDice(dice, FOURS);
+					
+				case FIVES:
+					return sumMatchingDice(dice, FIVES);
+					
+				case SIXES:
+					return sumMatchingDice(dice, SIXES);
+					
+				case THREE_OF_A_KIND:
+					for (int i = 0; i < 6; i++) {
+						if (distribution[i] >= 3) {
+							return sumDice(dice);
+						}
+					}
+					break;
+					
+				case FOUR_OF_A_KIND:
+					for (int i = 0; i < 6; i++) {
+						if (distribution[i] >= 4) {
+							return sumDice(dice);
+						}
+					}
+					break;
+					
+				case FULL_HOUSE:
+					for (int i = 0; i < 6; i++) {
+						if (distribution[i] == 3) {
+							for (int j = 0; j < 6; j++) {
+								if (distribution[j] == 2) {
+									return 25;
+								}
+							}
+						}
+					}
+					break;
+					
+				case SMALL_STRAIGHT:
+					for (int i = 0; i < 6; i++) {
+						if (distribution[i] != 0) {
+							sequenceCount += 1;
+						} else {
+							sequenceCount = 0;
+						}
+						if (sequenceCount == 4) {
+							return 30;
+						}
+					}
+					break;
+					
+				case LARGE_STRAIGHT:
+					for (int i = 0; i < 6; i++) {
+						if (distribution[i] != 0) {
+							sequenceCount += 1;
+						} else {
+							sequenceCount = 0;
+						}
+						if (sequenceCount == 4) {
+							return 40;
+						}
+					}
+					break;
+					
+				case YAHTZEE:
+					for (int i = 0; i < 6; i++) {
+						if (distribution[i] == 5) {
+							return 50;
+						}
+					}
+					break;
+					
+				case CHANCE:
+					return sumDice(dice);
+			}
+		return 0;
+	}
+	
+	private void diceDistribution(int[] distribution, int[] dice) {
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; j < N_DICE; j++) {
+				if (dice[j] == (i + 1)) {
+					distribution[i]++;
 				}
 			}
-			return 0;
 		}
-	
+	}
+
 	// Sum of values of every dice
 	private int sumDice(int[] dice) {
 		int score = 0;
