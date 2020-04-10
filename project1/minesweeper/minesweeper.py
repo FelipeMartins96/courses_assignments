@@ -198,7 +198,7 @@ class MinesweeperAI():
         neighbors = set()
         for i in range(cell[0] - 1, cell[0] + 2):
             for j in range(cell[1] - 1, cell[1] + 2):
-                if not (i == cell[0] and j == cell[1]) :
+                if not (i == cell[0] and j == cell[1]):
                     if i >= 0 and i < self.height:
                         if j >= 0 and j < self.width:
                             if (i, j) not in self.moves_made:
@@ -225,13 +225,11 @@ class MinesweeperAI():
                 for sentence_b in self.knowledge:
                     if sentence_a != sentence_b:
                         if sentence_a.cells.issubset(sentence_b.cells):
-                            new_sentences.append(Sentence(sentence_b.cells.difference(sentence_a.cells), sentence_b.count - sentence_a.count))
+                            new_sentences.append(Sentence(sentence_b.cells.difference(
+                                sentence_a.cells), sentence_b.count - sentence_a.count))
 
         for new in new_sentences:
             self.knowledge.append(new)
-
-
-
 
     def make_safe_move(self):
         """
