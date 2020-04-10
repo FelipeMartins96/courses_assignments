@@ -244,7 +244,7 @@ class MinesweeperAI():
         """
         safe_moves = self.safes.difference(self.moves_made)
         if len(safe_moves):
-            return safe_moves.pop()
+            return random.choice(list(safe_moves))
         return None
 
     def make_random_move(self):
@@ -262,5 +262,5 @@ class MinesweeperAI():
         possible_moves = possible_moves.difference(self.mines)
         possible_moves = possible_moves.difference(self.moves_made)
         if len(possible_moves):
-            return possible_moves.pop()
+            return random.choice(list(possible_moves))
         return None
