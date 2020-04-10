@@ -219,15 +219,39 @@ class MinesweeperAI():
             for safe in self.safes:
                 sentence.mark_safe(safe)
 
+        # remove empty sentences
+        self.knowledge = [sentence for sentence in self.knowledge if len(sentence.cells)]
+
+        # Infer new sentences
         new_sentences = []
         for sentence_a in self.knowledge:
-            if len(sentence_a.cells):
                 for sentence_b in self.knowledge:
                     if sentence_a != sentence_b:
                         if sentence_a.cells.issubset(sentence_b.cells):
-                            new_sentences.append(Sentence(sentence_b.cells.difference(
-                                sentence_a.cells), sentence_b.count - sentence_a.count))
+                            new_cells = sentence_b.cells.difference(sentence_a.cells)
+                            new_count = sentence_b.count - sentence_a.count
+                            # Check if inferred sentence already exists in knowledge
+                            unique = True
+                            for sentence in self.knowledge:
+                                if sentence.cells == new_cells:
+                                    if sentence.count == new_count:
+                                        unique = False
+                            if unique:
+                                new_sentences.append(Sentence(new_cells, new_count))
 
+        # mark any new sentences cells as safe or as mines
+        for sentence in new_sentences:
+            self.mines = self.mines.union(sentence.known_mines())
+            self.safes = self.safes.union(sentence.known_safes())
+            for mine in self.mines:
+                sentence.mark_mine(mine)
+            for safe in self.safes:
+                sentence.mark_safe(safe)
+
+        new_sentences = [sentence for sentence in new_sentences if len(sentence.cells)]
+
+
+        # append new sentences to knowledge base
         for new in new_sentences:
             self.knowledge.append(new)
 
