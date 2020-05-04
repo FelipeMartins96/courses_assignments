@@ -1,3 +1,7 @@
+import java.io.*;
+import java.util.HashMap;
+import acm.util.ErrorException;
+
 /*
  * File: NameSurferDataBase.java
  * -----------------------------
@@ -18,8 +22,23 @@ public class NameSurferDataBase implements NameSurferConstants {
  * exception if the requested file does not exist or if an error
  * occurs as the file is being read.
  */
-	public NameSurferDataBase(String filename) {
-		// You fill this in //
+	public NameSurferDataBase(String filename){
+		nameMap = new HashMap<String, NameSurferEntry>();
+		BufferedReader rd;
+		
+		try {
+			rd = new BufferedReader(new FileReader(filename));
+			while (true) {
+				String line = rd.readLine();
+				if (line == null) break;
+				NameSurferEntry entry = new NameSurferEntry(line);
+				nameMap.put(entry.getName(), entry);
+			}
+			rd.close();
+		} catch (IOException e) {
+			throw new ErrorException(e);
+		}
+		
 	}
 	
 /* Method: findEntry(name) */
@@ -29,8 +48,10 @@ public class NameSurferDataBase implements NameSurferConstants {
  * method returns null.
  */
 	public NameSurferEntry findEntry(String name) {
-		// You need to turn this stub into a real implementation //
-		return null;
+		return nameMap.get(name);
 	}
+	
+	/* Private instance variables */
+	private HashMap<String, NameSurferEntry> nameMap;
 }
 

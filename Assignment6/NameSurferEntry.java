@@ -6,7 +6,6 @@
  * of that name for each decade stretching back to 1900.
  */
 
-import acm.util.*;
 import java.util.*;
 
 public class NameSurferEntry implements NameSurferConstants {
@@ -19,7 +18,19 @@ public class NameSurferEntry implements NameSurferConstants {
  * decade.
  */
 	public NameSurferEntry(String line) {
-		// You fill this in //
+		// Create an int array of size NDECADES to store ranks
+		rank = new int[NDECADES];
+		
+		// Tokenize the inputed string
+		StringTokenizer tokenizer = new StringTokenizer(line);
+		
+		// Assign first token to name
+		name = tokenizer.nextToken();
+		
+		// Assign the following tokens to each decade rank
+		for (int i = 0; i < NDECADES; i++) {
+			rank[i] = Integer.parseInt(tokenizer.nextToken());
+		}
 	}
 
 /* Method: getName() */
@@ -27,8 +38,7 @@ public class NameSurferEntry implements NameSurferConstants {
  * Returns the name associated with this entry.
  */
 	public String getName() {
-		// You need to turn this stub into a real implementation //
-		return null;
+		return name;
 	}
 
 /* Method: getRank(decade) */
@@ -40,8 +50,7 @@ public class NameSurferEntry implements NameSurferConstants {
  * not appear in a decade, the rank value is 0.
  */
 	public int getRank(int decade) {
-		// You need to turn this stub into a real implementation //
-		return 0;
+		return rank[decade];
 	}
 
 /* Method: toString() */
@@ -50,8 +59,22 @@ public class NameSurferEntry implements NameSurferConstants {
  * NameSurferEntry.
  */
 	public String toString() {
-		// You need to turn this stub into a real implementation //
-		return "";
+		String str = name + " [";
+		for (int i = 0; i < NDECADES; i++) {
+			str = str + rank[i];
+			
+			if (i == NDECADES - 1) {
+				str = str + "]";
+			}
+			else {
+				str = str + " ";
+			}
+		}
+		return str;
 	}
+	
+	/* Private instance variables */
+	private String name;
+	private int[] rank;
 }
 
