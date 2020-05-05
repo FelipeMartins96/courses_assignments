@@ -9,6 +9,8 @@ import acm.program.*;
 import acm.graphics.*;
 import acm.util.*;
 import java.awt.event.*;
+import java.util.HashMap;
+
 import javax.swing.*;
 
 public class FacePamphlet extends ConsoleProgram 
@@ -57,6 +59,9 @@ public class FacePamphlet extends ConsoleProgram
 		add(new JButton("Add Friend"), WEST);
 		
 		addActionListeners();
+		
+		// Create Database
+		database = new FacePamphletDatabase();
     }
     
   
@@ -67,20 +72,58 @@ public class FacePamphlet extends ConsoleProgram
      */
     public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Add")) {
-			if (!nameTF.getText().equals("")) {
-				println("Add: " + nameTF.getText());
+			String name = nameTF.getText();
+			
+			// If name text field is not empty
+			if (!name.equals("")) {
+				FacePamphletProfile profile;
+				
+				// If profile does not exists in database
+				if (!database.containsProfile(name)) {
+					profile = new FacePamphletProfile(name);
+					database.addProfile(profile);
+					println("Add new profile: " + profile);
+				} else {
+					profile = database.getProfile(name);
+					println("Add: profile for " + name
+							+ " already exists: " + profile);
+				}
 			}
 		}
 		
 		if (e.getActionCommand().equals("Delete")) {
-			if (!nameTF.getText().equals("")) {
-				println("Delete: " + nameTF.getText());
+			String name = nameTF.getText();
+			
+			// If name text field is not empty
+			if (!name.equals("")) {
+				
+				// If profile exists in database
+				if (database.containsProfile(name)) {
+					database.deleteProfile(name);
+					println("Delete: profile of " + name 
+							+ " deleted");
+				} else {
+					println("Delete: profile with name " + name
+							+ " does not exist");
+				}
 			}
 		}
 		
 		if (e.getActionCommand().equals("Lookup")) {
-			if (!nameTF.getText().equals("")) {
-				println("Lookup: " + nameTF.getText());
+			String name = nameTF.getText();
+			
+			// If name text field is not empty
+			if (!name.equals("")) {
+				
+				// If profile exists in database
+				if (database.containsProfile(name)) {
+					FacePamphletProfile profile;
+					profile = database.getProfile(name);
+					println("Lookup: " + profile);
+				} else {
+					println("Lookup: profile with name " + name
+							+ " does not exist");
+				}
 			}
 		}
 		
@@ -106,6 +149,8 @@ public class FacePamphlet extends ConsoleProgram
 		}
 	}
     
+	/* Private instance variables */
     private JTextField nameTF, statusTF, pictureTF, friendTF;
+    private FacePamphletDatabase database;
 
 }
