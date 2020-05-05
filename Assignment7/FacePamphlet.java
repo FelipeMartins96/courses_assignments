@@ -76,17 +76,16 @@ public class FacePamphlet extends ConsoleProgram
 			
 			// If name text field is not empty
 			if (!name.equals("")) {
-				FacePamphletProfile profile;
 				
 				// If profile does not exists in database
 				if (!database.containsProfile(name)) {
-					profile = new FacePamphletProfile(name);
-					database.addProfile(profile);
-					println("Add new profile: " + profile);
+					currentProfile = new FacePamphletProfile(name);
+					database.addProfile(currentProfile);
+					println("Add new profile: " + currentProfile);
 				} else {
-					profile = database.getProfile(name);
+					currentProfile = database.getProfile(name);
 					println("Add: profile for " + name
-							+ " already exists: " + profile);
+							+ " already exists: " + currentProfile);
 				}
 			}
 		}
@@ -96,6 +95,7 @@ public class FacePamphlet extends ConsoleProgram
 			
 			// If name text field is not empty
 			if (!name.equals("")) {
+				currentProfile = null;
 				
 				// If profile exists in database
 				if (database.containsProfile(name)) {
@@ -111,15 +111,15 @@ public class FacePamphlet extends ConsoleProgram
 		
 		if (e.getActionCommand().equals("Lookup")) {
 			String name = nameTF.getText();
+			currentProfile = null;
 			
 			// If name text field is not empty
 			if (!name.equals("")) {
 				
 				// If profile exists in database
 				if (database.containsProfile(name)) {
-					FacePamphletProfile profile;
-					profile = database.getProfile(name);
-					println("Lookup: " + profile);
+					currentProfile = database.getProfile(name);
+					println("Lookup: " + currentProfile);
 				} else {
 					println("Lookup: profile with name " + name
 							+ " does not exist");
@@ -129,28 +129,70 @@ public class FacePamphlet extends ConsoleProgram
 		
 		if (e.getSource() == statusTF 
 				|| e.getActionCommand().equals("Change Status")) {
-			if (!statusTF.getText().equals("")) {
-				println("Change Status: " + statusTF.getText());
+			
+			// If there is a current profile
+			if (currentProfile != null) {
+				currentProfile.setStatus(statusTF.getText());
+				println("status set");
+			} else {
+				println("no current profile");
 			}
 		}
 		
 		if (e.getSource() == pictureTF 
 				|| e.getActionCommand().equals("Change Picture")) {
-			if (!pictureTF.getText().equals("")) {
-				println("Change Picture: " + pictureTF.getText());
+			// If there is a current profile
+			if (currentProfile != null) {
+				GImage image = null;
+				try {
+					image = new GImage("images/" 
+							+ pictureTF.getText());
+					currentProfile.setImage(image);
+					println("picture set");
+				} catch (ErrorException ex) {
+					println("can't acess file");
+				}
+			} else {
+				println("no current profile");
 			}
 		}
 		
 		if (e.getSource() == friendTF 
 				|| e.getActionCommand().equals("Add Friend")) {
-			if (!friendTF.getText().equals("")) {
-				println("Add Friend: " + friendTF.getText());
+			String friend = friendTF.getText();
+			// If input is not empty
+			if (!friend.equals("")) {
+				// If there is a current profile
+				if (currentProfile != null) {
+					// If friend profile exists in database
+					if (database.containsProfile(friend)) {
+						// If friend is not in 
+						// current profile friendlist
+						if (currentProfile.addFriend(friend)) {
+							println("Friend addded");
+							FacePamphletProfile friendProfile;
+							friendProfile = database.getProfile(
+									friend);
+							friendProfile.addFriend(
+									currentProfile.getName());
+						} else {
+							println("friend already in friendlist");
+						}
+					} else {
+						println("friend profile not in database");
+					}
+				} else {
+					println("no current profile");
+				}
 			}
 		}
+		
+		println("--> Current Profile: " + currentProfile);
 	}
     
 	/* Private instance variables */
     private JTextField nameTF, statusTF, pictureTF, friendTF;
     private FacePamphletDatabase database;
+    private FacePamphletProfile currentProfile;
 
 }
