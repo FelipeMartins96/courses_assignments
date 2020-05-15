@@ -207,10 +207,18 @@ class CrosswordCreator():
         degree. If there is a tie, any of the tied variables are acceptable
         return values.
         """
-        # TODO
-        for key in self.domains.keys():
-            if key not in assignment.keys():
-                return key
+        # create list of unassigned variables
+        unassigned = [key for key in self.domains.keys() if key not in assignment.keys()]
+        # add to list the number of remaining values and degree
+        unassigned = [(len(self.domains[var]), len(self.crossword.neighbors(var)), var) for var in unassigned]
+
+        # sort in decreasing order by degree
+        unassigned.sort(reverse=True, key=lambda tup: tup[1])
+        # sort in ascending order by remaining values
+        unassigned.sort(key=lambda tup: tup[0])
+
+        # return firt value after sort
+        return unassigned[0][2]
 
     def backtrack(self, assignment):
         """
