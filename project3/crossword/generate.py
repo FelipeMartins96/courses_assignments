@@ -119,7 +119,7 @@ class CrosswordCreator():
         overlap = self.crossword.overlaps[(x, y)] 
         if overlap is not None:
             for xValue in self.domains[x].copy():
-                if True in [xValue[overlap[0]] == yValue[overlap[1]] for yValue in self.domains[y]]:
+                if not True in [xValue[overlap[0]] == yValue[overlap[1]] for yValue in self.domains[y]]:
                     self.domains[x].remove(xValue)
                     revision = True
     
@@ -176,6 +176,8 @@ class CrosswordCreator():
                         indexes = self.crossword.overlaps[(key, neighbor)]
                         if assignment[key][indexes[0]] != assignment[neighbor][indexes[1]]:
                             return False
+        
+        return True
 
     def order_domain_values(self, var, assignment):
         """
@@ -224,13 +226,13 @@ class CrosswordCreator():
 
         var = self.select_unassigned_variable(assignment)
         for value in self.order_domain_values(var, assignment):
+            assignment[var] = value
             if self.consistent(assignment):
-                assignment[var] = value
                 result = self.backtrack(assignment)
                 if self.assignment_complete(assignment):
                     if self.consistent(assignment):
                         return result
-                assignment.pop(var)
+            assignment.pop(var)
 
         return None
 
