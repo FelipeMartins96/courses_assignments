@@ -99,11 +99,13 @@ class CrosswordCreator():
         (Remove any values that are inconsistent with a variable's unary
          constraints; in this case, the length of the word.)
         """
+        # For every variable in crossword
         for variable in self.domains:
+            # For every value in variable domain
             for value in self.domains[variable].copy():
+                # Remove values with incompatible length
                 if variable.length != len(value):
                     self.domains[variable].remove(value)
-
 
     def revise(self, x, y):
         """
@@ -117,7 +119,9 @@ class CrosswordCreator():
         revision = False
         
         overlap = self.crossword.overlaps[(x, y)] 
+
         if overlap is not None:
+            # Remove values with no corresponding overlapping value
             for xValue in self.domains[x].copy():
                 if not True in [xValue[overlap[0]] == yValue[overlap[1]] for yValue in self.domains[y]]:
                     self.domains[x].remove(xValue)
@@ -135,8 +139,9 @@ class CrosswordCreator():
         return False if one or more domains end up empty.
         """
         if arcs == None:
-            arcs = [ i for i in self.crossword.overlaps]
+            arcs = [i for i in self.crossword.overlaps]
         
+        # Iterate over arcs revising arc consistency for each
         while(len(arcs)):
             (x, y) = arcs.pop()
             if self.revise(x, y):
@@ -154,6 +159,7 @@ class CrosswordCreator():
         crossword variable); return False otherwise.
         """
 
+        # Check if all variables have been assigned
         if len(assignment) == len(self.domains):
             return True
         return False
@@ -187,7 +193,9 @@ class CrosswordCreator():
         that rules out the fewest values among the neighbors of `var`.
         """
         valueDict = dict()
+        # For every value in a variable domain
         for xValue in self.domains[var]:
+            # Check how many counts of neighbors values it rules out
             count = 0
             for neighbor in self.crossword.neighbors(var):
                 if neighbor not in assignment.keys():
@@ -197,7 +205,7 @@ class CrosswordCreator():
                             count += 1
             valueDict[xValue] = count
 
-        return sorted(valueDict, key = valueDict.get)
+        return sorted(valueDict, key=valueDict.get)
 
     def select_unassigned_variable(self, assignment):
         """
@@ -243,6 +251,7 @@ class CrosswordCreator():
             assignment.pop(var)
 
         return None
+
 
 def main():
 
