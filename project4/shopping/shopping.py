@@ -31,6 +31,33 @@ def main():
     print(f"True Negative Rate: {100 * specificity:.2f}%")
 
 
+def month_to_index(month):
+    if month == "Jan":
+        return 0
+    if month == "Feb":
+        return 1
+    if month == "Mar":
+        return 2
+    if month == "Apr":
+        return 3
+    if month == "May":
+        return 4
+    if month == "June":
+        return 5
+    if month == "Jul":
+        return 6
+    if month == "Aug":
+        return 7
+    if month == "Sep":
+        return 8
+    if month == "Oct":
+        return 9
+    if month == "Nov":
+        return 10
+    if month == "Dec":
+        return 11
+
+
 def load_data(filename):
     """
     Load shopping data from a CSV file `filename` and convert into a list of
@@ -59,7 +86,66 @@ def load_data(filename):
     labels should be the corresponding list of labels, where each label
     is 1 if Revenue is true, and 0 otherwise.
     """
-    raise NotImplementedError
+    evidence = []
+    labels = []
+    with open(filename) as csvfile:
+        file_rows = csv.reader(csvfile)
+        next(file_rows)
+        for row in file_rows:
+            values = []
+
+            # - Administrative, an integer
+            values.append(int(row.pop(0)))
+            # - Administrative_Duration, a floating point number
+            values.append(float(row.pop(0)))
+            # - Informational, an integer
+            values.append(int(row.pop(0)))
+            # - Informational_Duration, a floating point number
+            values.append(float(row.pop(0)))
+            # - ProductRelated, an integer
+            values.append(int(row.pop(0)))
+            # - ProductRelated_Duration, a floating point number
+            values.append(float(row.pop(0)))
+            # - BounceRates, a floating point number
+            values.append(float(row.pop(0)))
+            # - ExitRates, a floating point number
+            values.append(float(row.pop(0)))
+            # - PageValues, a floating point number
+            values.append(float(row.pop(0)))
+            # - SpecialDay, a floating point number
+            values.append(float(row.pop(0)))
+            # - Month, an index from 0 (January) to 11 (December)
+            values.append(month_to_index(row.pop(0)))
+            # - OperatingSystems, an integer
+            values.append(int(row.pop(0)))
+            # - Browser, an integer
+            values.append(int(row.pop(0)))
+            # - Region, an integer
+            values.append(int(row.pop(0)))
+            # - TrafficType, an integer
+            values.append(int(row.pop(0)))
+            # - VisitorType, an integer 0 (not returning) or 1 (returning)
+            visitor_type = row.pop(0)
+            if visitor_type == "Returning_Visitor":
+                values.append(1)
+            else:
+                values.append(0)
+            # - Weekend, an integer 0 (if false) or 1 (if true)label = row.pop(0)
+            weekend = values.pop(0)
+            if weekend == "TRUE":
+                values.append(1)
+            else:
+                values.append(0)
+
+            evidence.append(values)
+
+            label = row.pop(0)
+            if label == "TRUE":
+                labels.append(1)
+            else:
+                labels.append(0)
+
+    return evidence, labels
 
 
 def train_model(evidence, labels):
@@ -67,7 +153,10 @@ def train_model(evidence, labels):
     Given a list of evidence lists and a list of labels, return a
     fitted k-nearest neighbor model (k=1) trained on the data.
     """
-    raise NotImplementedError
+    model = KNeighborsClassifier(n_neighbors=1)
+    model.fit(evidence, labels)
+
+    return model
 
 
 def evaluate(labels, predictions):
@@ -85,8 +174,25 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    raise NotImplementedError
+    correct_positive = 0
+    correct_negative = 0
+    total_positive = 0
+    total_negative = 0
 
+    for i in range(len(labels)):
+        if labels[i] == 1:
+            total_positive += 1
+            if predictions[i] == 1:
+                correct_positive += 1
+        else:
+            total_negative += 1
+            if predictions[i] == 0:
+                correct_negative += 1
+
+    sensitivity = correct_positive / total_positive
+    specificity = correct_negative / total_negative
+
+    return sensitivity, specificity
 
 if __name__ == "__main__":
     main()
