@@ -131,7 +131,7 @@ def load_data(filename):
             else:
                 values.append(0)
             # - Weekend, an integer 0 (if false) or 1 (if true)label = row.pop(0)
-            weekend = values.pop(0)
+            weekend = row.pop(0)
             if weekend == "TRUE":
                 values.append(1)
             else:
