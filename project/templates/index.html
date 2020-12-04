@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Portfolio
+{% endblock %}
+
+{% block main %}
+<table id = "ads_table" class="display">
+    <caption>Query Ads</caption>
+    <thead>
+        <tr>
+            <th>Update Date</th>
+            <th>Id</th>
+            <th>Ad Date</th>
+            <th>Brand</th>
+            <th>Version</th>
+            <th>Year</th>
+            <th>Mileage</th>
+            <th>State</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        <script>
+            const formatter = new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL', minimumFractionigits: 2});
+        </script>
+        {% for row in ads %}
+            <tr>
+                {% if row["history"] == 1: %}
+                    <td><a href="/history?listid={{ row["listId"]}}">{{ row["timestamp"] }}</a></td>
+                {% endif %}
+                {% if row["history"] == 0: %}
+                    <td>{{ row["timestamp"] }}</td>
+                {% endif %}
+                <td><a href="{{ row["link"] }}">{{ row["listId"] }}</a></td>
+                <td id="{{ row["id"] }}_date"></td>
+                <td>{{ row["brand"] }}</td>
+                <td>{{ row["version"] }}</td>
+                <td>{{ row["regdate"] }}</td>
+                <td>{{ row["mileage"] }}</td>
+                <td>{{ row["state"] }}</td>
+                <td id="{{ row["id"] }}_price"></td>
+                <script>
+                    $( document ).ready(function() {
+                        var date = new Date({{ row["adDate"] }} * 1000)
+                        // var date_up = new Date({{ row["timestamp"] }} * 1000)
+                        document.getElementById("{{ row["id"] }}_price").innerHTML = formatter.format({{ row["price"]}});
+                        document.getElementById("{{ row["id"] }}_date").innerHTML = date.toLocaleString('en-GB');
+                        // document.getElementById("{{ row["id"] }}_updatedate").innerHTML = date_up.toLocaleString('en-GB');
+                    });
+                </script>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    $(document).ready( function () {
+        $('#ads_table').DataTable( {
+            "order": [[0, "desc"]]
+        });
+    } );
+</script>
+{% endblock %}

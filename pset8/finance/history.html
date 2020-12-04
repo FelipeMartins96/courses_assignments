@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Portfolio
+{% endblock %}
+
+{% block main %}
+<table class="table table-sm table-bordered table-hover">
+    <caption>Stocks Portfolio</caption>
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Transaction</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Shares</th>
+            <th scope="col">Price</th>
+            <th scope="col">Total</th>
+            <th scope="col">Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+            <tr>
+                <th scope="row">{{ transaction["operation"] }}</th>
+                <th scope="row">{{ transaction["symbol"] }}</th>
+                <td>{{ transaction["shares"] }}</td>
+                <td>{{ transaction["price"] }}</td>
+                <th scope="row">{{ transaction["total"] }}</th>
+                <td>{{ transaction["time"] }}</td>
+            </tr>
+        {% endfor %}
+</table>
+{% endblock %}

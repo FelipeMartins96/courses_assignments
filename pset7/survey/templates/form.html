@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <!-- http://getbootstrap.com/docs/4.1/content/typography/ -->
+    <h1 class="mb-3">Form</h1>
+
+    <!-- http://getbootstrap.com/docs/4.1/components/forms/ -->
+    <form action="/form" method="post">
+
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label>Username</label>
+                <input type="text" class="form-control" placeholder="Username" name="username" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label>Friend Code</label>
+                <input type="text" class="form-control" placeholder="12 digits friend code" name="code" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label>Phone Number</label>
+                <input type="text" class="form-control" placeholder="9 digits phone number" name="phone" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label>Team</label>
+                <select class="custom-select" name="team" required>
+                    <option selected disabled value="">Select Team</option>
+                    <option value="Mystic">Mystic</option>
+                    <option value="Valor">Valor</option>
+                    <option value="Instinct">Instinct</option>
+                </select>
+            </div>
+        </div>
+        <label>Playing Area</label>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="checkbox1" name="bv">
+            <label class="custom-control-label" for="checkbox1">Boa Viagem</label>
+        </div>
+        <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" id="checkbox2" name="ufpe">
+            <label class="custom-control-label" for="checkbox2">UFPE</label>
+        </div>
+
+
+
+        <!-- http://getbootstrap.com/docs/4.1/components/buttons/ -->
+        <button class="btn btn-primary" type="submit">Submit</button>
+
+    </form>
+
+    <script>
+        document.querySelector('form').onsubmit = function valthis() {
+            var checkBoxes = document.getElementsByClassName( 'custom-control-input' );
+            var isChecked = false;
+            for (var i = 0; i < checkBoxes.length; i++) {
+                if ( checkBoxes[i].checked ) {
+                    isChecked = true;
+                };
+            };
+            if ( isChecked ) {
+                } else {
+                    alert( 'Please, check at least one playing area!' );
+                    return false;
+                }
+        }
+    </script>
+
+{% endblock %}
